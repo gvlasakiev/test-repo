@@ -1,9 +1,13 @@
-package com.example.jorexa.landlordapp;
+package com.example.jorexa.landlordapp.Login;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.jorexa.landlordapp.R;
+
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class MainActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
