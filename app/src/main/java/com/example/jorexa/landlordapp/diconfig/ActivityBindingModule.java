@@ -14,5 +14,6 @@ public abstract class ActivityBindingModule {
             modules = LoginModule.class
     )
     //abstract SuperheroesListActivity superheroesListActivity();
-     abstract MainActivity mainActivity();
+     //abstract MainActivity mainActivity();
+    abstract MainActivity mainActivity();
 }

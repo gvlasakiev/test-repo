@@ -6,6 +6,8 @@ public interface LoginContracts {
     interface View {
         void setPresenter(Presenter presenter);
 
+        void loadLogin();
+
         void showError(Exception e);
     }
 
