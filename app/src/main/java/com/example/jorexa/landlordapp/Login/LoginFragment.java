@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.jorexa.landlordapp.R;
 import com.example.jorexa.landlordapp.async.AsyncRunner;
 import com.example.jorexa.landlordapp.async.testAsyncRunner;
+import com.example.jorexa.landlordapp.http.OkHttpHttpRequester;
 
 import java.io.IOException;
 
@@ -27,6 +28,7 @@ import okhttp3.Response;
 public class LoginFragment extends Fragment implements LoginContracts.View {
 
     private LoginContracts.Presenter mPresenter;
+    private OkHttpHttpRequester mHttpRequester;
 
     @Inject
     public LoginFragment() {
@@ -59,14 +61,17 @@ public class LoginFragment extends Fragment implements LoginContracts.View {
     public void loadLogin() {
 
         final OkHttpClient client = new OkHttpClient();
+        mHttpRequester = new OkHttpHttpRequester();
         String url = "http://echo.jsontest.com/key/value/one/two";
-        final Request request = new Request.Builder().get().url(url).build();
+        //final Request request = new Request.Builder().get().url(url).build();
 
         testAsyncRunner.runInBackground(() -> {
             Response response = null;
             try {
-                response = client.newCall(request).execute();
-                String body = response.body().string();
+                String body = mHttpRequester.get(url);
+                //response = client.newCall(request).execute();
+                //String body = response.body().string();
+                int g = 5;
             } catch (IOException e) {
                 e.printStackTrace();
             }
