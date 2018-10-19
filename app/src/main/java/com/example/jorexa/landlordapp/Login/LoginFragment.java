@@ -13,6 +13,9 @@ import com.example.jorexa.landlordapp.R;
 import com.example.jorexa.landlordapp.async.AsyncRunner;
 import com.example.jorexa.landlordapp.async.testAsyncRunner;
 import com.example.jorexa.landlordapp.http.OkHttpHttpRequester;
+import com.example.jorexa.landlordapp.models.TestUser;
+import com.example.jorexa.landlordapp.parsers.GsonJsonParser;
+import com.example.jorexa.landlordapp.parsers.base.JsonParser;
 
 import java.io.IOException;
 
@@ -29,6 +32,7 @@ public class LoginFragment extends Fragment implements LoginContracts.View {
 
     private LoginContracts.Presenter mPresenter;
     private OkHttpHttpRequester mHttpRequester;
+    private JsonParser<TestUser> mJsonParser;
 
     @Inject
     public LoginFragment() {
@@ -65,16 +69,24 @@ public class LoginFragment extends Fragment implements LoginContracts.View {
         String url = "http://echo.jsontest.com/key/value/one/two";
         //final Request request = new Request.Builder().get().url(url).build();
 
+        mJsonParser = new GsonJsonParser<>(TestUser.class, TestUser[].class);
+
+        //TestUser user = mJsonParser.fromJson("");
+
         testAsyncRunner.runInBackground(() -> {
-            Response response = null;
+            //Response response = null;
             try {
                 String body = mHttpRequester.get(url);
+                //TestUser user = new TestUser();
+                TestUser user = mJsonParser.fromJson(body);
                 //response = client.newCall(request).execute();
                 //String body = response.body().string();
+
                 int g = 5;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             int a = 2;
         });
 
