@@ -1,6 +1,7 @@
 package com.example.jorexa.landlordapp.Login;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,8 +10,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.jorexa.landlordapp.R;
+import com.example.jorexa.landlordapp.async.AsyncRunner;
+import com.example.jorexa.landlordapp.async.testAsyncRunner;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +57,22 @@ public class LoginFragment extends Fragment implements LoginContracts.View {
 
     @Override
     public void loadLogin() {
+
+        final OkHttpClient client = new OkHttpClient();
+        String url = "http://echo.jsontest.com/key/value/one/two";
+        final Request request = new Request.Builder().get().url(url).build();
+
+        testAsyncRunner.runInBackground(() -> {
+            Response response = null;
+            try {
+                response = client.newCall(request).execute();
+                String body = response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int a = 2;
+        });
+
         Toast.makeText(getContext(),
                 "Test Login...",
                 Toast.LENGTH_LONG)

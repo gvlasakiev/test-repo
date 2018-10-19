@@ -25,6 +25,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 @Component(modules = {
+        AsyncModule.class,
         AppModule.class,
         ActivityBindingModule.class,
         AndroidSupportInjectionModule.class})
