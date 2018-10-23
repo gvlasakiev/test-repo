@@ -7,20 +7,28 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jorexa.landlordapp.R;
 import com.example.jorexa.landlordapp.async.AsyncRunner;
 import com.example.jorexa.landlordapp.async.testAsyncRunner;
 import com.example.jorexa.landlordapp.http.OkHttpHttpRequester;
-import com.example.jorexa.landlordapp.models.TestUser;
+import com.example.jorexa.landlordapp.models.SignInUser;
 import com.example.jorexa.landlordapp.parsers.GsonJsonParser;
 import com.example.jorexa.landlordapp.parsers.base.JsonParser;
+import com.example.jorexa.landlordapp.repositories.HttpRepository;
+import com.example.jorexa.landlordapp.repositories.base.Repository;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -30,9 +38,12 @@ import okhttp3.Response;
  */
 public class LoginFragment extends Fragment implements LoginContracts.View {
 
+    @BindView(R.id.et_email) EditText mLoginEmail;
+    @BindView(R.id.et_password) EditText mLoginPassword;
+    @BindView(R.id.tv_message) TextView mMessage;
+
+
     private LoginContracts.Presenter mPresenter;
-    private OkHttpHttpRequester mHttpRequester;
-    private JsonParser<TestUser> mJsonParser;
 
     @Inject
     public LoginFragment() {
@@ -46,8 +57,11 @@ public class LoginFragment extends Fragment implements LoginContracts.View {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        ButterKnife.bind(this, view);
+
         return view;
     }
+
 
     @Override
     public void onResume() {
@@ -62,42 +76,41 @@ public class LoginFragment extends Fragment implements LoginContracts.View {
     }
 
     @Override
-    public void loadLogin() {
+    public void showCustomException(String text) {
 
-        final OkHttpClient client = new OkHttpClient();
-        mHttpRequester = new OkHttpHttpRequester();
-        String url = "http://echo.jsontest.com/key/value/one/two";
-        //final Request request = new Request.Builder().get().url(url).build();
-
-        mJsonParser = new GsonJsonParser<>(TestUser.class, TestUser[].class);
-
-        //TestUser user = mJsonParser.fromJson("");
-
-        testAsyncRunner.runInBackground(() -> {
-            //Response response = null;
-            try {
-                String body = mHttpRequester.get(url);
-                //TestUser user = new TestUser();
-                TestUser user = mJsonParser.fromJson(body);
-                //response = client.newCall(request).execute();
-                //String body = response.body().string();
-
-                int g = 5;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            int a = 2;
+        runOnUi(() -> {
+            //Toast.makeText(getContext(),
+            //        text,
+            //        Toast.LENGTH_LONG)
+            //        .show();
+            mMessage.setText(text);
         });
 
-        Toast.makeText(getContext(),
-                "Test Login...",
-                Toast.LENGTH_LONG)
-                .show();
+    }
+
+    @OnClick(R.id.btn_login)
+    public void signIn(View view) {
+        String email = mLoginEmail.getText().toString();
+        String password = mLoginPassword.getText().toString();
+
+        if (!email.matches("") && !password.matches("")) {
+            mPresenter.signIn(email, password);
+        } else {
+            //showCustomException("Please, enter email and password");
+            mMessage.setText("Please, enter email and password");
+        }
     }
 
     @Override
     public void showError(Exception e) {
+        runOnUi(() ->
+                Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG)
+                        .show()
+        );
+    }
 
+    private void runOnUi(Runnable action) {
+        getActivity()
+                .runOnUiThread(action);
     }
 }

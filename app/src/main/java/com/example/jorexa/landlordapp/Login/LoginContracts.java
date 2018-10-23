@@ -6,13 +6,15 @@ public interface LoginContracts {
     interface View {
         void setPresenter(Presenter presenter);
 
-        void loadLogin();
+        void showCustomException(String text);
 
         void showError(Exception e);
     }
 
     interface Presenter {
         void subscribe(View view);
+
+        void signIn(String email, String password);
 
         void loadLogin();
     }
